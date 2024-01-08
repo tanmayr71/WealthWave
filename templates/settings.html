@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}Profile Settings{% endblock %}
+
+{% block content %}
+<div class="container settings-page">
+    <h1 class="text-center my-4">Profile Settings</h1>
+
+    <!-- User ID Display -->
+    <!-- <h3 class="text-center mb-4">Your UserID: {{ user_id }}</h3> -->
+
+    <!-- Profile Photo Section -->
+    <div class="profile-photo-section text-center mb-4">
+        <div class="profile-photo-container">
+            <img src="{{ url_for('static', filename='css/images/default_profile_pic.jpg') }}" alt="Profile Photo" id="profilePhoto" class="profile-photo mb-3">
+        </div>
+        <input type="file" id="photoUpload" name="photoUpload" accept="image/png, image/jpeg">
+    </div>
+
+    <!-- Name Update Section
+    <div class="name-update-section mb-4">
+        <label for="nameInput">Name</label>
+        <input type="text" id="nameInput" name="name" placeholder="Enter your name" value="{{ user_name }}">
+    </div> -->
+
+    <!-- Email Frequency Dropdown -->
+    <div class="email-frequency-section mb-4">
+        <label for="emailFrequency">Email Frequency</label>
+        <select id="emailFrequency" name="emailFrequency">
+            <option value="weekly" {% if email_frequency == 'weekly' %} selected {% endif %}>Weekly</option>
+            <option value="monthly" {% if email_frequency == 'monthly' %} selected {% endif %}>Monthly</option>
+            <option value="yearly" {% if email_frequency == 'yearly' %} selected {% endif %}>Yearly</option>
+        </select>
+    </div>
+
+    <!-- Save Button -->
+    <div class="save-button-section text-center">
+        <button id="saveChangesBtn" class="btn btn-primary">Save Changes</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var photoInput = document.getElementById('photoUpload');
+    var profilePhoto = document.getElementById('profilePhoto');
+
+    var userId = '{{ user_id }}';
+    fetch('/getUserProfilePic/' + userId)
+    .then(response => response.json())
+    .then(data => {
+        // Parse the JSON body from the response
+        var parsedData = JSON.parse(data.body);
+        console.log(parsedData);
+        if (parsedData.exists) {
+            document.getElementById('profilePhoto').src = parsedData.url;
+        }
+    })
+    .catch(error => console.error('Error fetching user image:', error));
+
+    photoInput.addEventListener('change', function(event) {
+        if (event.target.files.length > 0) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onloadend = function() {
+                profilePhoto.src = reader.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Existing event listener for 'saveChangesBtn'
+    document.getElementById('saveChangesBtn').addEventListener('click', function() {
+    console.log("Button clicked!");
+    var photoInput = document.getElementById('photoUpload');
+    var emailFrequency = document.getElementById('emailFrequency').value;
+
+    var formData = new FormData();
+    if (photoInput.files.length > 0) {
+        formData.append('file', photoInput.files[0]);
+        formData.append('contentType', photoInput.files[0].type);
+    }
+    formData.append('emailFrequency', emailFrequency);
+    // Assuming user_id is available in your template
+    formData.append('user_id', '{{ user_id }}');
+    formData.append('username', '{{ user_name }}');
+    formData.append('user_email', '{{ user_email }}');
+
+    fetch('/updateUserPreferences', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        alert('Preferences updated successfully!');
+        window.location.href = '/home';  // Redirect to the home page
+        console.log('Nav to home page');
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        alert('Error updating preferences');
+    });
+});
+    // ...
+    });
+</script>
+
+{% endblock %}

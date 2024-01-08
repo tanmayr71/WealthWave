@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}Home Wave{% endblock %}
+
+{% block content %}
+<!-- Welcome Section -->
+<div class="welcome-section">
+    <h1>Welcome, {{ user_name }}!</h1>
+    <!-- Profile Picture -->
+    <img src="{{ url_for('static', filename='css/images/default_profile_pic.jpg') }}" alt="Profile Photo" id="profilePhoto" class="profile-photo">
+</div>
+
+<!-- Total Amount Section -->
+<div class="total-amount-section">
+    <h4>Total Amount of Last 10 Transactions: ${{ total_amount }}</h4>
+</div>
+
+<!-- Transactions Table Section -->
+<div class="transactions-table-section">
+    <h4>Last 10 Transactions</h4>
+    <div class="table-responsive">
+        <table id="transactionsTable" class="display table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction['timestamp'] }}</td>
+                    <td>{{ transaction['date'] }}</td>
+                    <td>${{ transaction['totalAmount'] }}</td>
+                    <td>{{ transaction['category'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables Script -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('top-bar').style.display = 'none';
+        // Load and update profile picture if available
+        var userId = '{{ user_id }}'; // Make sure user_id is passed to the template
+        fetch('/getUserProfilePic/' + userId)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                var parsedData = JSON.parse(data.body);
+                console.log(parsedData);
+                if (parsedData.exists) {
+                    document.getElementById('profilePhoto').src = parsedData.url;
+                }
+            })
+            .catch(error => console.error('Error fetching user image:', error));
+    });
+    $(document).ready(function() {
+        // Initialize DataTables
+        $('#transactionsTable').DataTable({
+            "scrollX": true,
+            "order": [[0, "desc"]],
+            "columnDefs": [{ "orderable": false, "targets": [1, 2, 3, 4] }],
+        });
+    });
+</script>
+
+{% block additional_css %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+<!-- Additional Styling -->
+<style>
+    .welcome-section, .total-amount-section, .transactions-table-section {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .welcome-section {
+        display: flex; /* Enable flexbox */
+        align-items: center; /* Vertically center items */
+        justify-content: space-between; /* Space between items */
+        background-color: #e9ecef;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: left; /* Align text to the left */
+    }
+
+    .total-amount-section {
+        background-color: #d4edda; /* Soft green background */
+        color: #155724; /* Dark green text */
+    }
+
+    .transactions-table-section {
+        text-align: left; /* Align table text to the left */
+    }
+
+    .table-responsive {
+        overflow-x: auto; /* For responsive table scrolling */
+    }
+
+    #transactionsTable {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #transactionsTable th, #transactionsTable td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    #transactionsTable th {
+        background-color: #f2f2f2;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    #transactionsTable th:hover {
+        background-color: #ddd;
+    }
+
+    #transactionsTable td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-photo {
+        width: 100px; /* Adjust the size as needed */
+        height: 100px; /* Adjust the size as needed */
+        border-radius: 50%; /* Circular profile picture */
+        object-fit: cover; /* To maintain aspect ratio */
+        margin-left: 20px; /* Spacing from the welcome text */
+    }
+</style>
+
+{% endblock %}
+{% endblock %}
