@@ -2,6 +2,10 @@
 
 WealthWave is a personal finance management tool designed to help users manage their finances efficiently. This project leverages cloud computing and advanced AI capabilities to provide robust and scalable financial management solutions.
 
+## Demo
+
+Watch the demo video on [YouTube](https://www.youtube.com/watch?v=4ZwqtT1zWqM).
+
 <img width="1470" alt="image" src="https://github.com/tanmayr71/WealthWave/assets/55703966/e10e5060-428c-4ebd-9ca6-4cb814e17679">
 
 ## Features
@@ -65,10 +69,6 @@ Access the application in your web browser at `http://localhost:5000`.
 - **HTML/CSS/JavaScript**: Frontend.
 - **AWS**: Cloud services (Elastic Beanstalk, Route 53, Cognito, DynamoDB, S3, Textract, Lambda, SES, API Gateway).
 - **GPT**: AI-driven insights.
-
-## Demo
-
-Watch the demo video on [YouTube](https://www.youtube.com/watch?v=4ZwqtT1zWqM).
 
 ## Contributing
 
