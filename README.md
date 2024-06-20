@@ -70,14 +70,6 @@ Access the application in your web browser at `http://localhost:5000`.
 - **AWS**: Cloud services (Elastic Beanstalk, Route 53, Cognito, DynamoDB, S3, Textract, Lambda, SES, API Gateway).
 - **GPT**: AI-driven insights.
 
-## Contributing
-
-We welcome contributions! Please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ## Abstract
 
 WealthWave leverages cloud computing and advanced natural language processing to revolutionize personal finance management. Integrating AWS services with GPT's AI capabilities, it offers a cutting-edge approach to automate bill digitization and enhance financial analysis. This project addresses challenges like manual bill entry and inadequate expense insights, providing a seamless, intelligent solution.
@@ -137,6 +129,14 @@ The team faced and overcame several challenges, such as structuring bill data, i
 ## Future Enhancements
 
 WealthWave aims to incorporate more advanced AI algorithms, improve the user interface, introduce a broader range of financial tools, enhance real-time data processing, add community features, and implement stronger security measures.
+
+## Contributing
+
+We welcome contributions! Please fork the repository and submit a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## References
 
